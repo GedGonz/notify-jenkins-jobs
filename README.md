@@ -1,6 +1,6 @@
 # notify-jenkins-jobs
 
-Este es un pequeño script para mostar notificaciones en el sistema operativo en este caso para linux
+Este es un pequeño script para mostar notificaciones por cada ultima ejecución en cada job por dia en el sistema operativo en este caso para linux
 
 ## Configuración: 
 
