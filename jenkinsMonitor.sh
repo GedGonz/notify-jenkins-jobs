@@ -49,39 +49,25 @@ for job in $jobs; do
 
     # Comprobar si la construcción es de hoy
     if [[ "$build_date" == "$today" ]]; then
-        # Solo imprimir si el resultado es uno de los estados deseados
-        if [[ "$result" == "SUCCESS" ]]; then
-            echo "Job: $job - Build Number: $number - Result: $result - Timestamp: $timestamp"
-	    notif_file="$notification_file/$job.notif" 
-            # Leer la fecha de la última notificación
-            last_notification_date=$(cat "$notif_file" 2>/dev/null)
+	    
+	notif_file="$notification_file/$job.notif" 
+	# Leer la fecha de la última notificación
+	last_notification_date=$(cat "$notif_file" 2>/dev/null)
 
-            # Comprobar si se debe enviar una notificación
-            if [[ "$last_notification_date" != "$today" ]]; then
-                # Enviar la notificación en segundo plano
-                notify-send -a "Resultado de ejecución" "Job: $job - Result: $result" -i /usr/local/bin/jenkins.ico --expire-time=$expire_time &
-                
-                # Actualizar el archivo con la fecha de hoy
+        if [[ "$last_notification_date" != "$today" ]]; then
+
+		echo "Job: $job - Build Number: $number - Result: $result - Timestamp: $timestamp"
+	    	# Enviar la notificación en segundo plano
+        	if [[ "$result" == "SUCCESS" ]]; then
+        		notify-send -a "Resultado de ejecución" "Job: $job - Result: $result" -i /usr/local/bin/jenkins.ico --expire-time=$expire_time &
+            	fi
+		
+                if [[ "$result" == "FAILURE" || "$result" == "UNSTABLE" ]]; then
+                	notify-send -a "Resultado de ejecución" "Job: $job - Result: $result" $url -i /usr/local/bin/jenkins.ico --expire-time=$expire_time --urgency=critical &
+            	fi
+		# Actualizar el archivo con la fecha de hoy
                 echo "$today" > "$notif_file"
-            fi
         fi
-        if [[ "$result" == "FAILURE" || "$result" == "UNSTABLE" ]]; then
-            echo "Job: $job - Build Number: $number - Result: $result - Timestamp: $timestamp"
-	    notif_file="$notification_file/$job.notif" 
-            # Leer la fecha de la última notificación
-            last_notification_date=$(cat "$notif_file" 2>/dev/null)
-
-            # Comprobar si se debe enviar una notificación
-            if [[ "$last_notification_date" != "$today" ]]; then
-                # Enviar la notificación en segundo plano
-                notify-send -a "Resultado de ejecución" "Job: $job - Result: $result" $url -i /usr/local/bin/jenkins.ico --expire-time=$expire_time &
-                
-                # Actualizar el archivo con la fecha de hoy
-                echo "$today" > "$notif_file"
-            fi
-        fi
-
-
     fi
 done
 
