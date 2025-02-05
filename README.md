@@ -15,4 +15,4 @@ Para configurar este script es necesario crear un cron para ejecutar este en un 
 ### Cron: 
 crear una carpeta para almacenar el log del script(opcional)
 
-*/5 8-17 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) /usr/local/bin/jenkinsMonitor.sh >> /usr/local/bin/logs/jenkins.log 2>&1
+*/5 8-17 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) /usr/local/bin/jenkinsMonitor.sh >> /tmp/jenkins_logs/jenkins.log 2>&1

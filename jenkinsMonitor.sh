@@ -51,10 +51,10 @@ for job in $jobs; do
     if [[ "$build_date" == "$today" ]]; then
 	    
 	notif_file="$notification_file/$job.notif" 
-	# Leer la fecha de la última notificación
-	last_notification_date=$(cat "$notif_file" 2>/dev/null)
+	# Leer el numero de ejecución de la última notificación
+	last_notification_build=$(cat "$notif_file" 2>/dev/null)
 
-        if [[ "$last_notification_date" != "$today" ]]; then
+        if [[ "$last_notification_date" != "$number" ]]; then
 
 		echo "Job: $job - Build Number: $number - Result: $result - Timestamp: $timestamp"
 	    	# Enviar la notificación en segundo plano
@@ -65,8 +65,8 @@ for job in $jobs; do
                 if [[ "$result" == "FAILURE" || "$result" == "UNSTABLE" ]]; then
                 	notify-send -a "Resultado de ejecución" "Job: $job - Result: $result" $url -i /usr/local/bin/jenkins.ico --expire-time=$expire_time --urgency=critical &
             	fi
-		# Actualizar el archivo con la fecha de hoy
-                echo "$today" > "$notif_file"
+		# Actualizar el archivo con el numero de la ejecución
+                echo "$number" > "$notif_file"
         fi
     fi
 done
